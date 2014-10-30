@@ -636,11 +636,6 @@ CLUSTERS                = "/tmp/emr.affinity_propagation.clusters"
 
 if __name__ == '__main__':
 
-# . Damping is commonly needed in over-relaxation methods and here it prevents the availability and responsibility updates from overshooting the solution and leading to oscillations. 
-# damping level should not have a significant affect on the resulting net similarity. Higher damping factors will lead to slower convergence.
-# What values should I try for damping? The damping factor dampfact should be at least 0.5 and less than 1. We recommend setting it to 0.9. If the algorithm does not converge, damping can be increased but numerical precision issues can arise if it goes beyond 0.99. Be mindful that large damping values slow convergence, so convits and maxits should be adjusted accordingly.
-# I noticed that one version of the affinity propagation software adds a tiny amount of noise (at the level of machine precision) to the input similarities. I read that this is *not* used for random initialization. So, what is it used for?We add a small amount of noise to the input similarities (i.e. randomly flipping a few of the least significant bits) to address possible degeneracies in the set of similarities provided by the user. For example, this can happen if similarities are symmetric and two data points are isolated from the rest - then, there may be some difficulty deciding which of the two points should be the exemplar and this can lead to oscillations. As another example, this can happen if the similarities are integer-valued and multiple solutions have the same, maximum, net similarity. However, affinity propagation is itself a deterministic algorithm and is robust to tiny changes in the input similarities. So, because the amount of noise we add is so tiny, you should find that multiple runs of affinity propagation always give the same answer, even though different, random noise patterns are being added.
-
   data = sys.argv[1:] # get the arguments passed from the command line
   dampening_factor = 0.5
   verbose = True
