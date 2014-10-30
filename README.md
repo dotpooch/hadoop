@@ -20,4 +20,14 @@ The Map Reduce Sequence:
 
 Affinity Propagation
 ------------------------------------------------------
-Affinity Propagation
+Affinity propagation is an unsupervised learning algorithm that clusters vectors by approximating log probability that one vector can be represented by another vector in the corpus.  Unlike k-means which calculates and average of the points in each cluster, affinity propagation chooses an existing vector that can serve as the centroid of the cluster.  It in fact is not the centroid but the exemplar of the cluster and like the centroid can be treated as the compressed point which represents all the points in that cluster.  Also unlike k-means, affinity propogation does not require that the user predefine the number of clusters.  This can be very helpful when the data set and the number of clusters is large because the algorithm only needs to be run once.
+
+The algorithm is slow and works by calculating the euchlidean distince between every point in the dataset and these values are assigned to the 'similarity' matrix.  This matrix is then modified by by replacing the diagonals with the median distance and adding a small amount of noise to all the off-diagonal values.  Three other matrices, 'availability','responsibility', and 'criterion' are also created and filled with zeros.  The 'similarity' and 'availability' are added together and these values are multipled by a dampening factor and added to update the 'responsibility' matrix. This 'responsibility' matrix, also multiplied by the dampening factor, then updates the 'availabilty' matrix.  The new 'responsibility' and new 'availbility' are added to create a 'criterion' maxtrix.  The column with the max for each row is determined and these columns represent the examplars.  This process is repeated until the examplars remain stable for a predefined number of iterations.
+
+The formulas are rather complex and seem best represented by the psuedo formulas
+responsibility(row,column) = similarity(row,column) - max{(availability + similarity)(row) excluding(row,column)}
+availability(k,k)          = max{0,positive responsibility(∑columns positive values excluding itself)}
+availability(row,column)   = min(0,availability(k,k) + max(∑all positive elements of each column excluding in responsibility(row,column) if > 0, 0)
+criterion                  = responsibility(row,column) + availability(row,column)
+
+The dampening percentage is the learning rate of the algorithm.  If this too low, then the algorithm may overshoot the convergence point and oscillate.  The small amount of noise added to the similarity matrix eliminates outliers.  For example, this can happen if similarities are symmetric and two data points are isolated from the rest - then, there may be some difficulty deciding which of the two points should be the exemplar and this can lead to oscillations.
