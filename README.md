@@ -24,10 +24,14 @@ Affinity propagation is an unsupervised learning algorithm that clusters vectors
 
 The algorithm is slow and works by calculating the euchlidean distince between every point in the dataset and these values are assigned to the 'similarity' matrix.  This matrix is then modified by by replacing the diagonals with the median distance and adding a small amount of noise to all the off-diagonal values.  Three other matrices, 'availability','responsibility', and 'criterion' are also created and filled with zeros.  The 'similarity' and 'availability' are added together and these values are multipled by a dampening factor and added to update the 'responsibility' matrix. This 'responsibility' matrix, also multiplied by the dampening factor, then updates the 'availabilty' matrix.  The new 'responsibility' and new 'availbility' are added to create a 'criterion' maxtrix.  The column with the max for each row is determined and these columns represent the examplars.  This process is repeated until the examplars remain stable for a predefined number of iterations.
 
-The formulas are rather complex and seem best represented by the psuedo formulas
+The formulas are rather complex and seem best represented by the psuedo formulas:
+
 responsibility(row,column) = similarity(row,column) - max{(availability + similarity)(row) excluding(row,column)}
+
 availability(k,k)          = max{0,positive responsibility(∑columns positive values excluding itself)}
+
 availability(row,column)   = min(0,availability(k,k) + max(∑all positive elements of each column excluding in responsibility(row,column) if > 0, 0)
+
 criterion                  = responsibility(row,column) + availability(row,column)
 
 The dampening percentage is the learning rate of the algorithm.  If this too low, then the algorithm may overshoot the convergence point and oscillate.  The small amount of noise added to the similarity matrix eliminates outliers.  For example, this can happen if similarities are symmetric and two data points are isolated from the rest - then, there may be some difficulty deciding which of the two points should be the exemplar and this can lead to oscillations.
