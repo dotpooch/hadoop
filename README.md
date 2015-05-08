@@ -1,4 +1,4 @@
-hadoop
+HADOOP
 ======
 
 This is a collection of machine learning apps meant to run on hadoop using the python library MRJob, created by Yelp.
